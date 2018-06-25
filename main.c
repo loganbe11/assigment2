@@ -41,14 +41,17 @@ int main()
     }
     if (strcmp(passwordAttempt,"quit")==0)
     {
+      fclose(fp);
       return 0;
     }
     memset(readPassword, 0, sizeof(char)*50);
-    while (fscanf(fp,"%d %s\n",&key,readPassword)!=EOF){
+    while (fscanf(fp,"%d %s\n",&key,readPassword)!=EOF)
+    {
       createReadPassword(hashTable,key,readPassword);
       memset(readPassword, 0, sizeof(char)*50);
 
     }
+    fclose(fp);
 
   }
   while(option!='4')
@@ -83,7 +86,7 @@ int main()
 
 
   }
-  fclose(fp);
+
   return 0;
 }
 
@@ -105,11 +108,12 @@ void createPassword(HTable *hashTable)
   printf("password added");
   return;
 }
-void createReadPassword(HTable *hashTable, int key, char* password){
-char* readPassword = malloc(sizeof(char)*50);
-strcpy(readPassword,password);
-insertData(hashTable,key,(void*)readPassword);
-return;
+void createReadPassword(HTable *hashTable, int key, char* password)
+{
+  char* readPassword = malloc(sizeof(char)*50);
+  strcpy(readPassword,password);
+  insertData(hashTable,key,(void*)readPassword);
+  return;
 }
 
 void accessPassword(HTable *hashTable)
@@ -129,10 +133,12 @@ void saveFile(char* filename, HTable *hashtable,char* password)
   FILE *fp;
   fp = fopen(filename, "w");
   fprintf(fp,"%s\n",password);
-  for (int i=0; i<17;i++){
-    while(hashtable->table[i]!=NULL){
-       fprintf(fp,"%d %s\n",hashtable->table[i]->key,hashtable->table[i]->data);
-       hashtable->table[i]=hashtable->table[i]->next;
+  for (int i=0; i<17; i++)
+  {
+    while(hashtable->table[i]!=NULL)
+    {
+      fprintf(fp,"%d %s\n",hashtable->table[i]->key,(char *)hashtable->table[i]->data);
+      hashtable->table[i]=hashtable->table[i]->next;
     }
   }
   return;
